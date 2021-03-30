@@ -1,6 +1,7 @@
 
 # %%
 import collections
+import typing
 import datetime
 import re
 
@@ -17,7 +18,7 @@ class Message:
 
 
 class MessageExtractor:
-    def __init__(self, path, show_every_lines=-1, verbose=False):
+    def __init__(self, path='', show_every_lines=-1, verbose=False):
         self.path = path
         self.debug = verbose
         self.show_every_line = show_every_lines
@@ -25,7 +26,11 @@ class MessageExtractor:
         self.line = 1
         self._pause_char = '\0'
         self.message_boxes = []
+        self._buffer = '\0'
+        if path != '':
+            self._read_file()
 
+    def _read_file(self):
         with open(self.path, 'r', encoding='utf-8-sig') as f:
             self._buffer = f.read().replace('\r', '') + '__EOF__\n'
         self._lookahead = self._scan()
@@ -140,7 +145,7 @@ class MessageExtractor:
         while not re.match('[0-9]{4}-[0-9]{2}-[0-9]{2}', self._lookahead):
             self._match(self._lookahead)
 
-    def Extract(self):
+    def extract(self, path='') -> typing.List[Message]:
         """Extract chat messages.
         Convert chat records txt files into a list of chat messages.
 
@@ -148,6 +153,10 @@ class MessageExtractor:
         ---
         A list of chat messages.
         """
+        if path != '':
+            self.change_path(path)
+        if self._buffer == '\0':
+            raise ValueError('[MessageExtractor]: Nothing to extract.')
         print('[MessageExtractor]: Extracting chat messages...')
         self.message_boxes = []
         self._parse_filehead()
@@ -160,15 +169,9 @@ class MessageExtractor:
         Change the path to .txt chat record.
         """
         self.path = path
+        self._read_file()
 
-    def reload_file(self):
-        """Reload .txt file."""
-        with open(self.path, 'r', encoding='utf-8-sig') as f:
-            self._buffer = f.read().replace('\r', '') + '__EOF__\n'
-        self._lookahead = self._scan()
-        print('[MessageExtractor]: File reloaded.')
-
-    def drop_bad_data(self):
+    def drop_bad_data(self) -> typing.List[Message]:
         # TODO: Drop '系统消息'
         """Further process extracted message.
         Drops @Somebody and [图片].
@@ -202,10 +205,3 @@ class MessageExtractor:
             print('[MessageExtractor]: Successfully outputted to', path)
         else:
             print('[MessageExtractor]: Cannot output. List is empty.')
-
-
-path = './test.txt'
-extractor = MessageExtractor(path)
-result = extractor.Extract()
-result = extractor.drop_bad_data()
-extractor.to_csv()

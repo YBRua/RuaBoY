@@ -6,16 +6,15 @@ If everything goes on well, RuaBoY will be a chat bot.
 - Highly likely to have poor performance.
 - Highly likely to be buggy.
 
-## DevLog
-**Now Available:**
-- Converting QQ chat records .txt files to a lists of messages.
+## Todo List
+- [x] Converting QQ chat records .txt files to a lists of messages.
 - Getting rid of useless chat messages:
-   - [图片]、[表情]、[红包], etc.
-   - @Somebody、@全体成员
-
-**TODO:**
+   - [x] [图片]、[表情]、[红包], etc.
+   - [x] @Somebody、@全体成员
+   - [ ] 系统消息
 - Preprocessing Pipeline
-  - Tokenizer
-  - Embedding
-- NN Model
-- Response Generation
+  - [x] Tokenizer
+  - [x] Data Preparation
+- Model
+  - [ ] NN Model
+  - [ ] Response Generation

@@ -176,7 +176,7 @@ class MessageExtractor:
         """Further process extracted message.
         Drops @Somebody and [图片].
         """
-        print('[MessageExtractor]: Dropping bad data...')
+        # print('[MessageExtractor]: Dropping bad data...')
         if self.message_boxes:
             self.message_boxes = [
                 msg for msg in self.message_boxes
@@ -185,14 +185,14 @@ class MessageExtractor:
         else:
             print('[MessageExtractor]: Cannot drop bad data. List is empty.')
             return []
-        print('[MessageExtractor]: Bad data successfully dropped.')
+        # print('[MessageExtractor]: Bad data successfully dropped.')
         return self.message_boxes
 
     def to_csv(self, path='output.csv'):
         """Output to .csv file.
         Outputs current message list to a .csv file.
         """
-        print('[MessageExtractor]: Outputing to .csv file...')
+        # print('[MessageExtractor]: Outputing to .csv file...')
         if self.message_boxes:
             with open(path, 'w', encoding='utf-8-sig') as f:
                 f.write('datetime,uid,username,message\n')
